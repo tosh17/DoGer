@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DogPhoto</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="base_api">https://dog.ceo/dog-api/</string>
+    <!--https://en.wikipedia.org/w/api.php?action=query&prop=info&pageids=1633570&inprop=url-->
+    <!--https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=rottweiler%20dog&utf8=&format=json-->
+
+</resources>
