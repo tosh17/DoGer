@@ -14,7 +14,7 @@ class MainActivity : FragmentActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                selectTab("RandomDog")
+                selectTab("ListDog")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
@@ -33,7 +33,7 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        selectTab("RandomDog")
+        selectTab("ListDog")
     }
 
 
@@ -56,6 +56,7 @@ class MainActivity : FragmentActivity() {
         val transaction = fm.beginTransaction()
         if (newFragment == null) {
             when (tab) {
+                "ListDog"->transaction.add(R.id.fragment_conteiner, Screens.ListDogScreen.fragment, tab)
                 "RandomDog" ->
                     transaction.add(R.id.fragment_conteiner, Screens.RandomDogScreen.fragment, tab)
             }

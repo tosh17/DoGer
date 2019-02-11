@@ -1,30 +1,34 @@
 package ru.thstdio.dogphoto.mvp.randomdog.presenter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
 import io.reactivex.Scheduler
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import ru.thstdio.dogphoto.api.Api
-import ru.thstdio.dogphoto.api.source.ServiceDogApi
 import ru.thstdio.dogphoto.mvp.randomdog.model.ModelRandomDog
 import ru.thstdio.dogphoto.mvp.randomdog.view.ViewRandomDog
+import javax.inject.Inject
+import javax.inject.Named
 
 @InjectViewState
-class PresenterRandomDog : MvpPresenter<ViewRandomDog>() {
-    val model = ModelRandomDog(Api())
-    fun setLike() {
+open class PresenterRandomDog() : MvpPresenter<ViewRandomDog>() {
+
+    @Inject
+    lateinit var model: ModelRandomDog
+
+ //   @Inject @Named("mainTread")
+    @field:[Inject Named("mainTread")]
+    lateinit var mainThread: Scheduler
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        findNewDog()
     }
 
-    fun newRandom() {}
     @SuppressLint("CheckResult")
-    fun init() {
-        model.searRandomUrl()
-            .observeOn(AndroidSchedulers.mainThread())
+    private fun findNewDog() {
+        model.searchRandomUrl()
+            .observeOn(mainThread)
             .subscribe { url ->
                 run {
                     viewState.setDogImage(url)
@@ -35,8 +39,29 @@ class PresenterRandomDog : MvpPresenter<ViewRandomDog>() {
             }
     }
 
+
+    @SuppressLint("CheckResult")
     private fun findWebWiki(parseDogName: String) {
-        model.searchWikiLink(parseDogName)!!.subscribe(viewState::setWebView)
+        model.searchWikiLink(" dog $parseDogName")!!.observeOn(mainThread).subscribe(
+            viewState::setWebView
+        )
+    }
+
+    var isTitlechange: Boolean = false
+    fun appBarLayout(p1: Float) {
+        if (p1 < 0.5 && !isTitlechange) {
+            isTitlechange = true
+            viewState.changeTitle(isTitlechange)
+        }
+        if (p1 > 0.5 && isTitlechange) {
+            isTitlechange = false
+            viewState.changeTitle(isTitlechange)
+        }
+        Log.d("Test", " " + p1)
+    }
+
+    fun clickFab() {
+        findNewDog()
     }
 }
 

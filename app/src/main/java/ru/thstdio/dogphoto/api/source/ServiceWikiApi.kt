@@ -1,5 +1,6 @@
 package ru.thstdio.dogphoto.api.source
 
+import io.reactivex.Maybe
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -24,9 +25,10 @@ interface ServiceWikiApi {
         @Query("action") action: String,
         @Query("prop") prop: String,
         @Query("pageids") pageids: Long,
-        @Query("inprop") inprop: String
+        @Query("inprop") inprop: String,
+        @Query("format") format: String
 
-    ): Single<WikiIdPageSearch>
+    ): Maybe<WikiIdPageSearch>
 
 //    @GET("api.php?action=query&list=search&srsearch={dogName}&utf8=&format=json")
 //    abstract fun getSearchInfo(@Path("dogName") dogName: String): Single<WikiSearchEntity>
