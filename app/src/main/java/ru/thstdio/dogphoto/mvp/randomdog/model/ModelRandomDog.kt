@@ -15,7 +15,8 @@ open class ModelRandomDog(
         return apiDog
             .getRandomDog()
             .subscribeOn(Schedulers.io())
-            .map { singleDog -> singleDog.message }
+            .map {
+                    singleDog -> singleDog.message }
     }
 
     fun searchWikiLink(parseDogName: String): Maybe<String>? {

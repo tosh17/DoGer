@@ -4,6 +4,8 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -12,14 +14,14 @@ import ru.thstdio.dogphoto.api.source.ServiceWikiApi
 import javax.inject.Named
 
 @Module
-class ApiModule {
+open class ApiModule {
     @Named("WikiUrl")
     @Provides
     fun getBaseUrlWiki(): String = "https://en.wikipedia.org/w/"
 
     @Named("DogUrl")
     @Provides
-    fun getBaseUrlDog(): String = "https://dog.ceo/api/"
+    open fun getBaseUrlDog(): String = "https://dog.ceo/api/"
 
     @Provides
     fun createApiWiki(@Named("WikiUrl") baseUrl: String, gson: GsonConverterFactory): ServiceWikiApi {
@@ -32,9 +34,13 @@ class ApiModule {
     }
 
     @Provides
-    fun createApiDog(@Named("DogUrl") baseUrl: String, gson: GsonConverterFactory): ServiceDogApi {
+    fun createApiDog(
+        @Named("DogUrl") baseUrl: String, gson: GsonConverterFactory,
+        client: OkHttpClient
+    ): ServiceDogApi {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
+            .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(gson)
             .build()
@@ -47,4 +53,18 @@ class ApiModule {
             FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES
         ).create()
     )
+
+    @Provides
+    fun okHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+    }
+
+    @Provides
+    fun loggingInterceptor(): HttpLoggingInterceptor {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        return interceptor
+    }
 }

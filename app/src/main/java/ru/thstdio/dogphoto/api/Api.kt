@@ -10,23 +10,32 @@ import ru.thstdio.dogphoto.api.source.ServiceWikiApi
 
 class Api() {
 
-            fun createDogApi(): ServiceDogApi {
-               return  Retrofit.Builder()
-                    .baseUrl("https://dog.ceo/api/")
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create(
-                        GsonBuilder().setFieldNamingPolicy(
-                            FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()))
-                    .build()
-                    .create(ServiceDogApi::class.java)
-            }
+    fun createDogApi(): ServiceDogApi {
+        return Retrofit.Builder()
+            .baseUrl("https://dog.ceo/api/")
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(
+                GsonConverterFactory.create(
+                    GsonBuilder().setFieldNamingPolicy(
+                        FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES
+                    ).create()
+                )
+            )
+            .build()
+            .create(ServiceDogApi::class.java)
+    }
+
     fun createWikiApi(): ServiceWikiApi {
-        return  Retrofit.Builder()
+        return Retrofit.Builder()
             .baseUrl("https://en.wikipedia.org/w/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(
-                GsonBuilder().setFieldNamingPolicy(
-                    FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()))
+            .addConverterFactory(
+                GsonConverterFactory.create(
+                    GsonBuilder().setFieldNamingPolicy(
+                        FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES
+                    ).create()
+                )
+            )
             .build()
             .create(ServiceWikiApi::class.java)
     }

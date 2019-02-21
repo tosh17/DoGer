@@ -21,7 +21,8 @@ class App : Application() {
         super.onCreate()
         instance = this
         cicerone = Cicerone.create()
-        daggerComponent = DaggerAppComponent.builder().build()
+        daggerComponent = DaggerAppComponent.builder().setContext(applicationContext).build()
+            //builder().build()
     }
 
     fun getNavigatorHolder(): NavigatorHolder {

@@ -12,7 +12,6 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import ru.thstdio.dogphoto.di.DaggerTestComponent
-
 import ru.thstdio.dogphoto.di.TestComponent
 import ru.thstdio.dogphoto.di.module.TestModuleModel
 import ru.thstdio.dogphoto.di.module.TestSchedulerModule
@@ -27,6 +26,7 @@ class PresenterRandomDogTest {
 
     lateinit var presenter: PresenterRandomDog
     lateinit var testScheduler: TestScheduler
+
     @Mock
     lateinit var viewState: ViewRandomDog
 
@@ -59,7 +59,7 @@ class PresenterRandomDogTest {
         val dogName = "superDog"
         val url = "$dogName/123.jpeg"
         val wikiSearch = " dog $dogName"
-        val wikiUrl ="wiki $dogName page"
+        val wikiUrl = "wiki $dogName page"
 
         val component: TestComponent = DaggerTestComponent.builder()
             .testSchedulerModule(object : TestSchedulerModule() {
@@ -70,7 +70,7 @@ class PresenterRandomDogTest {
                     val model = super.createRandomDogModel()
                     Mockito.`when`(model.searchRandomUrl()).thenReturn(Single.just(url))
                     Mockito.`when`(model.searchWikiLink(wikiSearch)).thenReturn(Maybe.just(wikiUrl))
-                        return model
+                    return model
                 }
             })
             .build()
@@ -81,7 +81,6 @@ class PresenterRandomDogTest {
         Mockito.verify(viewState).setDogImage(url)
         Mockito.verify(viewState).setDogName(dogName)
         Mockito.verify(viewState).setWebView(wikiUrl)
-
     }
 
 

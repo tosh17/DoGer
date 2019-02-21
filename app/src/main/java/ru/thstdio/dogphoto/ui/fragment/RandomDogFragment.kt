@@ -1,13 +1,9 @@
 package ru.thstdio.dogphoto.ui.fragment
 
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.transition.TransitionManager
-import android.support.v7.graphics.Palette
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -16,16 +12,23 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.random_dog_fragment.view.*
 import ru.thstdio.dogphoto.App
 import ru.thstdio.dogphoto.mvp.randomdog.presenter.PresenterRandomDog
 import ru.thstdio.dogphoto.mvp.randomdog.view.ViewRandomDog
 import ru.thstdio.dogphoto.ui.web.MyWebViewClient
+import ru.thstdio.dogphoto.util.imageloader.IImageLoader
+import ru.thstdio.dogphoto.util.imageloader.ListenerColorPallet
+import ru.thstdio.dogphoto.util.imageloader.glide.GlideApp
+
+import javax.inject.Inject
 
 
 class RandomDogFragment : MvpAppCompatFragment(), ViewRandomDog, AppBarLayout.OnOffsetChangedListener {
+
+    @Inject
+    lateinit var loader: IImageLoader
+
     override fun changeTitle(isTitlechange: Boolean) {
         TransitionManager.beginDelayedTransition(root.appBarCollaps as ViewGroup)
         val layoutParams = root.dogName.layoutParams as AppBarLayout.LayoutParams
@@ -48,31 +51,9 @@ class RandomDogFragment : MvpAppCompatFragment(), ViewRandomDog, AppBarLayout.On
         root.dogName.text = name
     }
 
+
     override fun setDogImage(path: String) {
-        Picasso.get().load(path)
-            .error(ru.thstdio.dogphoto.R.drawable.ic_pile_of_dung)
-            .placeholder(ru.thstdio.dogphoto.R.drawable.ic_long_haired_dog_head)
-            .into(object : Target {
-                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                    placeHolderDrawable?.let { root.imageViewDog.setImageDrawable(placeHolderDrawable) }
-                }
-
-                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                    errorDrawable?.let { root.imageViewDog.setImageDrawable(errorDrawable) }
-                }
-
-                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                    root.imageViewDog.setImageBitmap(bitmap)
-                    bitmap?.let { bitmap ->
-                        Palette.from(bitmap).generate { palette ->
-                            palette?.dominantSwatch?.let {
-                                setAppbarBackground(it.rgb, it.titleTextColor)
-
-                            }
-                        }
-                    }
-                }
-            })
+    loader.load(path, root.imageViewDog)
     }
 
     fun setAppbarBackground(color: Int, titleTextColor: Int) {
@@ -93,7 +74,7 @@ class RandomDogFragment : MvpAppCompatFragment(), ViewRandomDog, AppBarLayout.On
     lateinit var mPresenter: PresenterRandomDog
 
     @ProvidePresenter(type = PresenterType.GLOBAL, tag = "RandomWiki")
-    fun providePresenter():PresenterRandomDog {
+    fun providePresenter(): PresenterRandomDog {
         mPresenter = PresenterRandomDog()
         App.instance.daggerComponent.inject(mPresenter)
         return mPresenter
@@ -104,6 +85,13 @@ class RandomDogFragment : MvpAppCompatFragment(), ViewRandomDog, AppBarLayout.On
         root.webContent.webViewClient = MyWebViewClient()
         root.appBar.addOnOffsetChangedListener(this)
         root.fab.setOnClickListener { mPresenter.clickFab() }
+        App.instance.daggerComponent.inject(this)
+        loader.setOnListener(object : ListenerColorPallet {
+            override fun setColorFilter(colorBackGraund: Int, colorText: Int) {
+                setAppbarBackground(colorBackGraund, colorText)
+            }
+        })
+
         return root
     }
 }

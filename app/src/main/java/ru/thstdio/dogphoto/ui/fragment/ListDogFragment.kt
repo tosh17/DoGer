@@ -11,6 +11,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.list_fragment.view.*
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
+import ru.terrakok.cicerone.commands.Command
+import ru.thstdio.dogphoto.R
 import ru.thstdio.dogphoto.mvp.listdog.presenter.ListDogPresenter
 import ru.thstdio.dogphoto.mvp.listdog.view.ListDogAdapter
 import ru.thstdio.dogphoto.mvp.listdog.view.ListDogViewState
@@ -18,10 +21,10 @@ import ru.thstdio.dogphoto.mvp.listdog.view.ListDogViewState
 
 class ListDogFragment : MvpAppCompatFragment(), ListDogViewState {
     companion object {
-        fun getInstance(typeAdapter: Int): ListDogFragment {
+        fun getInstance(typeAdapter: String): ListDogFragment {
             val fragment = ListDogFragment()
             val args = Bundle()
-            args.putInt("typeAdapter", typeAdapter)
+            args.putString("typeAdapter", typeAdapter)
             fragment.setArguments(args)
             return fragment
         }
@@ -35,11 +38,15 @@ class ListDogFragment : MvpAppCompatFragment(), ListDogViewState {
         return root
     }
 
-   @InjectPresenter(type = PresenterType.GLOBAL,tag = "DogList")
+    @InjectPresenter(type = PresenterType.GLOBAL, tag = "DogList")
     lateinit var mPresenter: ListDogPresenter
 
-//    @ProvidePresenter(type = PresenterType.GLOBAL)
-//    fun providePresenter() = ListDogPresenter()
+    @ProvidePresenter(type = PresenterType.GLOBAL, tag = "DogList")
+    fun providePresenter(): ListDogPresenter {
+        val presenter = ListDogPresenter()
+        presenter.navigationTag = arguments?.getString("typeAdapter")!!
+        return presenter
+    }
 
     private lateinit var adapter: ListDogAdapter
 

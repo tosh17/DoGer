@@ -3,26 +3,52 @@ package ru.thstdio.dogphoto.ui
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
+import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.PresenterType
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
+import ru.terrakok.cicerone.commands.Command
+import ru.thstdio.dogphoto.App
 import ru.thstdio.dogphoto.R
+import ru.thstdio.dogphoto.mvp.main.presenter.MainPresenter
+import ru.thstdio.dogphoto.mvp.main.view.MainView
+import ru.thstdio.dogphoto.navigation.LocalCiceroneHolder
 import ru.thstdio.dogphoto.navigation.screen.Screens
+import ru.thstdio.dogphoto.ui.fragment.CurrentDogGallery.Companion.LIKE_DOG
+import javax.inject.Inject
 
-class MainActivity : FragmentActivity() {
+class MainActivity : MvpAppCompatActivity(), MainView {
 
+    @Inject
+    lateinit var ciceroneHolder: LocalCiceroneHolder
+
+    var navigatorList: MutableMap<String, Navigator> = HashMap()
+
+    @InjectPresenter(type = PresenterType.GLOBAL, tag = "MainView")
+    lateinit var mPresenter: MainPresenter
+
+//    @ProvidePresenter(type = PresenterType.GLOBAL, tag = "MainView")
+//    fun providePresenter(): MainPresenter {
+//        mPresenter = MainPresenter()
+//        App.instance.daggerComponent.inject(mPresenter)
+//        return mPresenter
+//    }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                selectTab("ListDog")
+                mPresenter.currentTab("ListDog")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-                selectTab("RandomDog")
+
+                mPresenter.currentTab("RandomDog")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
-                selectTab("RandomDog")
+                mPresenter.currentTab("LikeDog")
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -32,43 +58,41 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        App.instance.daggerComponent.inject(this)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        selectTab("ListDog")
+        mPresenter.currentTab("ListDog")
     }
 
 
-    private fun selectTab(tab: String) {
-        val fm = supportFragmentManager
-        var currentFragment: Fragment? = null
-        val fragments = fm.fragments
-        if (fragments != null) {
-            for (f in fragments) {
-                if (f.isVisible) {
-                    currentFragment = f
-                    break
+    override fun selectTab(tab: String) {
+        if (navigatorList[tab] == null) {
+            val navigator = object : SupportAppNavigator(this, R.id.fragment_conteiner) {
+                override fun applyCommands(commands: Array<Command>) {
+                    super.applyCommands(commands)
+         //           supportFragmentManager.executePendingTransactions()
                 }
             }
+
+            navigatorList[tab] = navigator
+            ciceroneHolder.getCicerone(tab)?.navigatorHolder?.setNavigator(navigator)
+
         }
-        val newFragment = fm.findFragmentByTag(tab)
-
-        if (currentFragment != null && newFragment != null && currentFragment === newFragment) return
-
-        val transaction = fm.beginTransaction()
-        if (newFragment == null) {
+            ciceroneHolder.getCicerone(tab)?.router?.run {
             when (tab) {
-                "ListDog"->transaction.add(R.id.fragment_conteiner, Screens.ListDogScreen.fragment, tab)
-                "RandomDog" ->
-                    transaction.add(R.id.fragment_conteiner, Screens.RandomDogScreen.fragment, tab)
+                "ListDog" -> newRootScreen(Screens.ListDogScreen.tag(tab))
+                "RandomDog" -> newRootScreen(Screens.RandomDogScreen)
+                "LikeDog" -> newRootScreen(Screens.GalleryDogScreen.initValueMyDog())
             }
-        }
 
-        if (currentFragment != null) {
-            transaction.hide(currentFragment)
         }
+          }
 
-        if (newFragment != null) {
-            transaction.show(newFragment)
-        }
-        transaction.commitNow()
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mPresenter.removeNavigator()
     }
 }
