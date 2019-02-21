@@ -19,3 +19,27 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn **
+-renamesourcefileattribute SourceFile
+-dontwarn android.arch.util.paging.CountedDataSource
+-dontwarn android.arch.persistence.room.paging.LimitOffsetDataSource
+-keepattributes SourceFile,LineNumberTable
+# RxJava configuration
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+  long producerIndex;
+  long consumerIndex;
+}
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+  rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+  rx.internal.util.atomic.LinkedQueueNode consumerNode;
+}
+# Retrofit configuration
+-keepattributes Signature,Exceptions
+-keepclasseswithmembers class * {
+  @retrofit2.http.* <methods>;
+}
+# Preserve entities
+-keep class ru.thstdio.dogphoto.api.entity.** { *; }

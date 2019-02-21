@@ -1,5 +1,7 @@
 *.iml
 .gradle
+/app/dogger.jks
+/app/keystore.properties
 /local.properties
 /.idea/caches
 /.idea/libraries
