@@ -6,7 +6,8 @@ import ru.thstdio.dogphoto.mvp.main.view.MainView
 
 @InjectViewState
 class MainPresenter : MvpPresenter<MainView>() {
-    lateinit var currentTab: String
+     var currentTab: String?=null
+
 
     fun currentTab(tab: String) {
         currentTab = tab
@@ -14,6 +15,11 @@ class MainPresenter : MvpPresenter<MainView>() {
     }
 
     fun removeNavigator() {
+
+    }
+
+    fun initTab(tab: String) {
+        if (currentTab == null) currentTab(tab)
 
     }
 }

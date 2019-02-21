@@ -1,9 +1,9 @@
-package ru.thstdio.dogphoto
+package ru.thstdio.dogphoto.ui
 
 import android.app.Application
-import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.Router
 import ru.thstdio.dogphoto.di.component.AppComponent
 import ru.thstdio.dogphoto.di.component.DaggerAppComponent
 

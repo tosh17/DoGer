@@ -3,6 +3,8 @@ package ru.thstdio.dogphoto.mvp.listdog.view.subdog
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.jakewharton.rxbinding2.view.RxView
+import kotlinx.android.synthetic.main.item_list_all_dog.view.*
 import ru.thstdio.dogphoto.R
 import ru.thstdio.dogphoto.mvp.listdog.presenter.ListDogAdapterPresenter
 import ru.thstdio.dogphoto.mvp.listdog.view.ListDogHolder
@@ -24,6 +26,7 @@ class ListDogSubAdapter(val presenter: ListDogAdapterPresenter, val position: In
 
 
     override fun onBindViewHolder(holder: ListDogHolder, subPosition: Int) {
+        RxView.clicks(holder.itemView.imageView).map { view-> holder }.subscribe{presenter.onClick(position,subPosition)}
         presenter.onSubBind(holder, position, subPosition)
     }
 }

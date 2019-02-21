@@ -1,12 +1,11 @@
 package ru.thstdio.dogphoto.repo.room
 
 import android.graphics.Bitmap
-import io.reactivex.Scheduler
-import ru.thstdio.dogphoto.App
 import ru.thstdio.dogphoto.repo.IRepoImage
 import ru.thstdio.dogphoto.repo.room.entity.RoomImage
 import ru.thstdio.dogphoto.repo.room.entity.RoomLike
 import ru.thstdio.dogphoto.repo.sha1
+import ru.thstdio.dogphoto.ui.App
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream

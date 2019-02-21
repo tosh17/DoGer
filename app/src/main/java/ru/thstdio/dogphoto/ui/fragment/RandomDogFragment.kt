@@ -13,14 +13,12 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.random_dog_fragment.view.*
-import ru.thstdio.dogphoto.App
 import ru.thstdio.dogphoto.mvp.randomdog.presenter.PresenterRandomDog
 import ru.thstdio.dogphoto.mvp.randomdog.view.ViewRandomDog
+import ru.thstdio.dogphoto.ui.App
 import ru.thstdio.dogphoto.ui.web.MyWebViewClient
 import ru.thstdio.dogphoto.util.imageloader.IImageLoader
 import ru.thstdio.dogphoto.util.imageloader.ListenerColorPallet
-import ru.thstdio.dogphoto.util.imageloader.glide.GlideApp
-
 import javax.inject.Inject
 
 

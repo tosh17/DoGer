@@ -10,10 +10,10 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
 import kotlinx.android.synthetic.main.list_fragment.view.*
-import ru.thstdio.dogphoto.App
 import ru.thstdio.dogphoto.mvp.doggallery.presenter.GalleryDogPresenter
 import ru.thstdio.dogphoto.mvp.doggallery.view.DogGalleryViewState
 import ru.thstdio.dogphoto.mvp.doggallery.view.GalleryDogAdapter
+import ru.thstdio.dogphoto.ui.App
 
 class CurrentDogGallery : MvpAppCompatFragment(), DogGalleryViewState {
     companion object {

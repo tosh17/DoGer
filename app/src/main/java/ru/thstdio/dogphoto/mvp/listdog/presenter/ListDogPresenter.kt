@@ -4,11 +4,10 @@ import android.annotation.SuppressLint
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.Scheduler
-import ru.terrakok.cicerone.android.support.SupportAppNavigator
-import ru.thstdio.dogphoto.App
 import ru.thstdio.dogphoto.mvp.listdog.model.ListDogModel
 import ru.thstdio.dogphoto.mvp.listdog.view.ListDogViewState
 import ru.thstdio.dogphoto.navigation.LocalCiceroneHolder
+import ru.thstdio.dogphoto.ui.App
 import javax.inject.Inject
 import javax.inject.Named
 

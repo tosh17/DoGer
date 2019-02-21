@@ -1,10 +1,10 @@
 package ru.thstdio.dogphoto.mvp.doggallery.view
 
-import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.gallery_item.view.*
-import ru.thstdio.dogphoto.App
+import ru.thstdio.dogphoto.R
+import ru.thstdio.dogphoto.ui.App
 import ru.thstdio.dogphoto.util.imageloader.IImageLoader
 import javax.inject.Inject
 
@@ -19,14 +19,15 @@ class GalleryHolder(itemView: View) : RecyclerView.ViewHolder(itemView), IGaller
 
     override fun onBind(url: String, isLike: Boolean) {
         loader.load(url, itemView.imageDog)
-      //  itemView.imageHeart.setOnClickListener {clickLike(true)  }
     }
 
 
     override  fun clickLike(isLike: Boolean){
-
-        itemView.imageHeart.setColorFilter(if(isLike)Color.RED else Color.WHITE)
+        itemView.imageHeart.setColorFilter(getColor(isLike))
     }
 
+    fun getColor(isLike: Boolean)=
+        if(isLike) itemView.context.resources.getColor(R.color.heartEnable)
+        else itemView.context.resources.getColor(R.color.heartDisable)
 
 }

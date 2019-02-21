@@ -2,7 +2,6 @@ package ru.thstdio.dogphoto.ui
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
@@ -10,13 +9,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
-import ru.thstdio.dogphoto.App
 import ru.thstdio.dogphoto.R
 import ru.thstdio.dogphoto.mvp.main.presenter.MainPresenter
 import ru.thstdio.dogphoto.mvp.main.view.MainView
 import ru.thstdio.dogphoto.navigation.LocalCiceroneHolder
 import ru.thstdio.dogphoto.navigation.screen.Screens
-import ru.thstdio.dogphoto.ui.fragment.CurrentDogGallery.Companion.LIKE_DOG
 import javax.inject.Inject
 
 class MainActivity : MvpAppCompatActivity(), MainView {
@@ -60,11 +57,12 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         setContentView(R.layout.activity_main)
         App.instance.daggerComponent.inject(this)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        mPresenter.currentTab("ListDog")
+        mPresenter.initTab("ListDog")
     }
 
 
     override fun selectTab(tab: String) {
+        if(mPresenter.currentTab==tab)
         if (navigatorList[tab] == null) {
             val navigator = object : SupportAppNavigator(this, R.id.fragment_conteiner) {
                 override fun applyCommands(commands: Array<Command>) {

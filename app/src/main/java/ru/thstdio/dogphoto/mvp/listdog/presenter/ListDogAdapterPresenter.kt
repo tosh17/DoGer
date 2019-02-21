@@ -31,14 +31,9 @@ class ListDogAdapterPresenter {
             if (this.url == null) loadUrl(holder, this)
             else holder.setImage(this.url!!)
         }
-         holder.setOnClick(object : OnClickListener{
-             override fun click() {
-                 clickDog(position)
-             }
-         })
     }
 
-    private fun clickDog(position: Int) {
+     fun onClick(position: Int) {
         val screen = Screens.GalleryDogScreen
         screen.initValue(dogs[position].breed,"")
         ciceroneHolder.getCicerone("ListDog")?.router?.navigateTo(screen)
@@ -66,6 +61,7 @@ class ListDogAdapterPresenter {
     fun onBind(holder: OnBindListSubDogHolder, position: Int) {
         holder.setTitle(dogs[position].breed)
         holder.setAdapter(this, position)
+
     }
 
     fun onSubBind(holder: OnBindListDogHolder, position: Int, subPosition: Int) {
@@ -75,6 +71,11 @@ class ListDogAdapterPresenter {
             else holder.setImage(subDogs[position][subPosition].url!!)
         }
 
+    }
+    fun onClick(position: Int, subPosition: Int) {
+        val screen = Screens.GalleryDogScreen
+        screen.initValue(subDogs[position][subPosition].breed,subDogs[position][subPosition].subBreed!!)
+        ciceroneHolder.getCicerone("ListDog")?.router?.navigateTo(screen)
     }
 
     fun getItemViewType(position: Int): Int =
@@ -96,6 +97,8 @@ class ListDogAdapterPresenter {
             }
         }
     }
+
+
 
 
 }

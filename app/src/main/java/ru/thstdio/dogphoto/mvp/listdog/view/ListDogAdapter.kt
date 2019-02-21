@@ -3,6 +3,8 @@ package ru.thstdio.dogphoto.mvp.listdog.view
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.jakewharton.rxbinding2.view.RxView
+import kotlinx.android.synthetic.main.item_list_all_dog.view.*
 import ru.thstdio.dogphoto.R
 import ru.thstdio.dogphoto.mvp.listdog.presenter.ListDogAdapterPresenter
 import ru.thstdio.dogphoto.mvp.listdog.view.subdog.ListDogHolderSub
@@ -40,7 +42,11 @@ class ListDogAdapter(val presenter: ListDogAdapterPresenter) : RecyclerView.Adap
 
     override fun onBindViewHolder(holder: BaseListDogHolder, position: Int) {
         when {
-            holder is ListDogHolder -> presenter.onBind(holder, position)
+            holder is ListDogHolder -> {
+                presenter.onBind(holder, position)
+                RxView.clicks(holder.itemView.imageView).map { view -> holder }
+                    .subscribe { presenter.onClick(position) }
+            }
             holder is ListDogHolderSub -> presenter.onBind(holder, position)
         }
     }
